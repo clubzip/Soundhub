@@ -38,7 +38,7 @@ dependencies {
 
     //ted permission
     implementation "gun0912.ted:tedpermission:2.2.0"
-
+    implementation 'androidx.cardview:cardview:1.0.0'
 
 
     testImplementation 'junit:junit:4.12'

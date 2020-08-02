@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RecordActivity"/>
+        <activity android:name=".SavePopupActivity"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".ListActivity"/>
     </application>
 
 </manifest>

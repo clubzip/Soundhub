@@ -7,6 +7,7 @@ import androidx.loader.content.CursorLoader;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.hardware.Camera;
@@ -56,6 +57,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity{
 
+    private String AppName = "AppName";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity{
         tedPermission();
 
         Button RecordButton = (Button) findViewById(R.id.recordPageBtn);
+        Button ListButton = (Button) findViewById(R.id.ListPageBtn);
 
         RecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +77,27 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
+
+
+        ListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("checkFirst", getApplicationContext().MODE_PRIVATE);
+        boolean checkFirst = pref.getBoolean("checkFirst", false);
+        if(checkFirst == false){//앱 최초 실행시
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("checkFirst",true);
+            editor.commit();
+            File dir = new File("/sdcard/" + AppName);
+            if(!dir.exists()) dir.mkdirs();
+        }
 
 
     }

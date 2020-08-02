@@ -1,6 +1,7 @@
 package com.example.useretrofit2;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -33,11 +34,13 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
 
     String AppName = "AppName";
     private String filePath;
+    private String fileDir;
     private Camera cam;
     private MediaRecorder mediaRecorder;
     private SurfaceView sv;
     private SurfaceHolder sh;
     private boolean recording = false;
+    private final int requestCodeSaveFile = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,8 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
 
         Button StopButton = (Button) findViewById(R.id.stopBtn);
 
-        filePath = "/sdcard/" + AppName + "_record.mp4";
+        fileDir = "/sdcard/" + AppName + "/";
+        filePath = fileDir + AppName + "_record.mp4";
 
         UploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,8 +73,6 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
                         Toast.makeText(RecordActivity.this, "Record Started", Toast.LENGTH_LONG).show();
 
                         try{
-
-
 
                             mediaRecorder = new MediaRecorder();
                             cam.unlock();
@@ -114,16 +116,44 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
                     cam.lock();
                     recording = false;
                     Toast.makeText(RecordActivity.this, "Record Stopped", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(view.getContext(), SavePopupActivity.class);
+                    startActivityForResult(intent, requestCodeSaveFile);
+
+
                 }
             }
         });
 
-
         setting();
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case 0://Save new file(Save popup)
+                String newfilename = data.getStringExtra("filename");
+                File filePre = new File(filePath);
+                File fileNow = new File(fileDir + newfilename + ".mp4");
+
+                if(filePre.renameTo(fileNow)){
+                    Toast.makeText(RecordActivity.this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(RecordActivity.this, "저장 실패", Toast.LENGTH_SHORT).show();
+                }
+
+
+                break;
+        }
 
 
 
     }
+
+
 
     private void setting(){
         cam = Camera.open();
