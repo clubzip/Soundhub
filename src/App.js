@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import React from 'react';
+import './App.css';
+import Signin from './components/Signin';
+import Signout from './components/Signout';
+import Signup from './components/Signup';
+import Player from './components/Player';
+import CommitList from './components/CommitList';
+import $ from "jquery";
+import {} from "jquery.cookie";
+import { post, get } from 'axios';
+
+
+
+class App extends React.Component {
+  state = {
+    information:[]
+  }
+  componentDidMount(){
+    const url = 'http://localhost:3001/api/project/detail';
+    post(url,{projectID:"testgroup"})
+    .then((response) => {
+      console.log("commits")
+      console.log(response.data.commits);
+      this.setState({information : response.data.commits});
+    })
+  }
+
+  render() {
+    let logged;
+    console.log($.cookie("login_email"))
+    if ($.cookie("login_email")!="null") {
+      logged = true;
+    } else {
+      logged = false;
+    }
+    console.log(logged);
+    const {information} = this.state;
+    return (
+
+      <div className="App">
+        <Player projectID="testgroup" target="master"/>
+        {logged? <Signout /> : <div><Signin /><Signup /></div>}
+        <CommitList projectID="testgroup" data={information}/>
+      </div>
+    )
+  }
 }
+
 
 export default App;
