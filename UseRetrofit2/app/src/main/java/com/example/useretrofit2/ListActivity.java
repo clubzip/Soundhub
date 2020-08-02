@@ -3,14 +3,19 @@ package com.example.useretrofit2;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.List;
 import java.util.Locale;
 
 public class ListActivity extends Activity {
@@ -50,20 +55,54 @@ public class ListActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(ListActivity.this, PlayActivity.class);
 
-                ListViewCustomDTO dto = (ListViewCustomDTO) adapter.getItem(position);
-                String f_name = dto.getName();
+                PopupMenu popup = new PopupMenu(ListActivity.this, view);
+                ListActivity.this.getMenuInflater().inflate(R.menu.menu_listview, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()){
+                            case R.id.play:
+                                Intent intent = new Intent(ListActivity.this, PlayActivity.class);
 
-                intent.putExtra("filename", f_name);
-                startActivity(intent);
+                                ListViewCustomDTO dto = (ListViewCustomDTO) adapter.getItem(position);
+                                String f_name = dto.getName();
 
+                                intent.putExtra("filename", f_name);
+                                startActivity(intent);
 
+                                break;
+
+                            case R.id.delete:
+                                ListViewCustomDTO del_dto = (ListViewCustomDTO) adapter.getItem(position);
+
+                                File file = new File(fileDir + del_dto.getName());
+                                file.delete();
+
+                                adapter.delItem(del_dto);
+                                adapter.notifyDataSetChanged();
+
+                                Toast.makeText(ListActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+
+                                break;
+
+                            case R.id.upload:
+                                ListViewCustomDTO dto_up = (ListViewCustomDTO) adapter.getItem(position);
+                                String f_name_up = dto_up.getName();
+                                upLoad2Server uls = (upLoad2Server) new upLoad2Server().execute(fileDir + f_name_up);
+                                Toast.makeText(ListActivity.this, "업로드되었습니다.", Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
+
+                        return false;
+                    }
+                });
+
+                popup.show();
+                return;
             }
         });
-
-
-
 
 
         listView.setAdapter(adapter);

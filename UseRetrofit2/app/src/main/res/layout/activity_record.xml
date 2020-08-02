@@ -31,16 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/recordBtn" />
 
 
-    <Button
-        android:id="@+id/uploadBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:width="120dp"
-        android:text="Upload"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/recordBtn"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <SurfaceView
         android:id="@+id/sv"
