@@ -1,7 +1,10 @@
 package com.example.useretrofit2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +46,25 @@ public class ListActivity extends Activity {
             adapter.addItem(dto);
 
         }
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = new Intent(ListActivity.this, PlayActivity.class);
+
+                ListViewCustomDTO dto = (ListViewCustomDTO) adapter.getItem(position);
+                String f_name = dto.getName();
+
+                intent.putExtra("filename", f_name);
+                startActivity(intent);
+
+
+            }
+        });
+
+
+
+
 
         listView.setAdapter(adapter);
 
