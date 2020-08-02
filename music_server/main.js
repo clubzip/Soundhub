@@ -22,7 +22,7 @@ app.post('/uploadvideo',(req,res)=>{
 		var filename;
 		var size;
 		if(part.filename){
-			filename = part.filename.split('/')[2];
+			filename = part.filename.split('/')[3];
 			size = part.byteCount;
 		}
 
