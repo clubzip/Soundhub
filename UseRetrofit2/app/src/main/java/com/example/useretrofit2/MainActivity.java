@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity{
 
         Button RecordButton = (Button) findViewById(R.id.recordPageBtn);
         Button ListButton = (Button) findViewById(R.id.ListPageBtn);
+        Button downloadButton = (Button) findViewById(R.id.downloadBtn);
 
         RecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +86,14 @@ public class MainActivity extends AppCompatActivity{
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 startActivity(intent);
 
+            }
+        });
+
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                downLoad2App down2app = (downLoad2App) new downLoad2App().execute("/sdcard/AppName/New_Recordiop.mp4");
             }
         });
 

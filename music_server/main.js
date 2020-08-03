@@ -2,6 +2,7 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 
+
 const express = require('express');
 const app = express();
 var multiparty = require('multiparty');
@@ -58,13 +59,24 @@ app.post('/uploadvideo',(req,res)=>{
 
 
 	form.parse(req);
-/*
-	req.on('data',()=>{
-		
+
+});
+
+app.post('/downloadvideo',(req,res)=>{
+
+	console.log('who get in here downloadvideo /users');
+
+	var stats = fs.statSync(__dirname + '/uploaded_music/target.mp4');
+	var fileSizeInBytes = stats["size"];
+
+	res.writeHead(200, {
+		"Content-Type": "application/octet-stream",
+		"Content-Disposition": "attachment; filename=target.mp4",
+		"Content-Length": fileSizeInBytes
 	});
-	
+
 	// 1. stream 생성
-	var stream = fs.createReadStream(resourcePath);
+	var stream = fs.createReadStream(__dirname + '/uploaded_music/target.mp4');
 		
 	// 2. 잘게 쪼개진 stream이 몇번 전송되는지 확인하기 위한 count
 	var count = 0;
@@ -90,13 +102,11 @@ app.post('/uploadvideo',(req,res)=>{
 		console.log(err);
 		res.end('500 Internal Server '+err);
 	});
+
 	
-	req.on('end',()=>{
-		
-		//console.log("name:"+inputData.name+" , phone:"+inputData.phone);
-	});
-	*/
 });
+
+
 
 app.listen(8077,()=>{
 	
