@@ -36,11 +36,6 @@ public class downLoad2App extends AsyncTask<String, String, String> {
         byte[] buffer;
         int maxBufferSize = 1 * 1024 * 1024;
 
-        File sourceFile = new File(urls[0]);
-        if(!sourceFile.isFile()){
-            Log.e("Huzza", "Source File Does not exist");
-            return "";
-        }
 
         try{ // open a URL connection to the Servlet
 
@@ -56,12 +51,12 @@ public class downLoad2App extends AsyncTask<String, String, String> {
             OutputStream outStream = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
 
-            writer.write("sample_text");
+            writer.write(fileName);
             writer.flush();
             writer.close();
 
             //File downloaded = new File("/sdcard/AppName/target.mp4");
-            FileOutputStream fos = new FileOutputStream("/sdcard/AppName/target.mp4");
+            FileOutputStream fos = new FileOutputStream("/sdcard/AppName/" + fileName);
 
             InputStream is = conn.getInputStream();
 

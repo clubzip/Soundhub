@@ -93,7 +93,10 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
 
-                downLoad2App down2app = (downLoad2App) new downLoad2App().execute("/sdcard/AppName/New_Recordiop.mp4");
+                Intent intent = new Intent(getApplicationContext(), ServerFileListActivity.class);
+                startActivity(intent);
+
+                //downLoad2App down2app = (downLoad2App) new downLoad2App().execute("/sdcard/AppName/New_Recordiop.mp4");
             }
         });
 

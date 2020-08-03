@@ -26,6 +26,7 @@
         <activity android:name=".SavePopupActivity"
             android:theme="@android:style/Theme.Dialog"/>
         <activity android:name=".ListActivity"/>
+        <activity android:name=".ServerFileListActivity"/>
         <activity android:name=".PlayActivity"/>
     </application>
 

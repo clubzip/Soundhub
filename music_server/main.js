@@ -66,44 +66,65 @@ app.post('/downloadvideo',(req,res)=>{
 
 	console.log('who get in here downloadvideo /users');
 
-	var stats = fs.statSync(__dirname + '/uploaded_music/target.mp4');
-	var fileSizeInBytes = stats["size"];
+	var f_name;
+	req.on('data',(received)=>{
+		f_name = received;
 
-	res.writeHead(200, {
-		"Content-Type": "application/octet-stream",
-		"Content-Disposition": "attachment; filename=target.mp4",
-		"Content-Length": fileSizeInBytes
-	});
+		console.log(f_name);
 
-	// 1. stream 생성
-	var stream = fs.createReadStream(__dirname + '/uploaded_music/target.mp4');
+		var stats = fs.statSync(__dirname + '/uploaded_music/' + f_name);
+		var fileSizeInBytes = stats["size"];
+	
+		res.writeHead(200, {
+			"Content-Type": "application/octet-stream",
+			"Content-Disposition": "attachment; filename=" + f_name,
+			"Content-Length": fileSizeInBytes
+		});
+	
+		// 1. stream 생성
+		var stream = fs.createReadStream(__dirname + '/uploaded_music/' + f_name);
+			
+		// 2. 잘게 쪼개진 stream이 몇번 전송되는지 확인하기 위한 count
+		var count = 0;
 		
-	// 2. 잘게 쪼개진 stream이 몇번 전송되는지 확인하기 위한 count
-	var count = 0;
-	
-	// 3. 잘게 쪼개진 data를 전송할 수 있으면 data 이벤트 발생
-	stream.on('data', function(data){
-		count = count + 1;
-		console.log('data count='+count);
-		// 3.1. data 이벤트가 발생되면 해당 data를 클라이언트로 전송
-		res.write(data);
+		// 3. 잘게 쪼개진 data를 전송할 수 있으면 data 이벤트 발생
+		stream.on('data', function(data){
+			count = count + 1;
+			console.log('data count='+count);
+			// 3.1. data 이벤트가 발생되면 해당 data를 클라이언트로 전송
+			res.write(data);
+		});
+		
+		// 4. 데이터 전송이 완료되면 end 이벤트 발생
+		stream.on('end', function(){
+			console.log('end streaming');
+			// 4.1. 클라이언트에 전송완료를 알림
+			res.end();
+			
+		});
+		
+		// 5. 스트림도중 에러 발생시 error 이벤트 발생
+		stream.on('error', function(err){
+			console.log(err);
+			res.end('500 Internal Server '+err);
+		});
+
 	});
-	
-	// 4. 데이터 전송이 완료되면 end 이벤트 발생
-	stream.on('end', function(){
-		console.log('end streaming');
-		// 4.1. 클라이언트에 전송완료를 알림
+
+});
+
+app.post('/downloadServerFileList',(req,res)=>{
+
+	console.log('who get in here downloadServerFileList /users');
+
+	fs.readdir(__dirname + '/uploaded_music/', (err, filelist)=>{
+		filelist.forEach(file=>{
+			res.write(file + '/');
+		});
+
 		res.end();
-		
-	});
-	
-	// 5. 스트림도중 에러 발생시 error 이벤트 발생
-	stream.on('error', function(err){
-		console.log(err);
-		res.end('500 Internal Server '+err);
 	});
 
-	
 });
 
 
