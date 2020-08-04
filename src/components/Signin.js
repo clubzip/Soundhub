@@ -30,6 +30,7 @@ class Signin extends React.Component {
     this.state={
       show:false,
       showFailed:false,
+      userid:'',
       email:'',
       password:'',
       facebookID:'',
@@ -43,6 +44,7 @@ class Signin extends React.Component {
   handleModal(){
     this.setState({show:!this.state.show,
                     showFailed:false,
+                    userid:'',
                     email:'',
                     password:'',
                     facebookID:'',
@@ -52,14 +54,14 @@ class Signin extends React.Component {
 
   signIn = ()=>{
     const url = 'http://localhost:3001/api/signin';
-    return post(url,{email: this.state.email, password: this.state.password});
+    return post(url,{userid: this.state.userid, password: this.state.password});
   }
   signUp = ()=>{
     const url = 'http://localhost:3001/api/signup';
     if (this.state.facebookID!==''){
-        return post(url+'/facebook',{email: this.state.email, facebookID: this.state.facebookID});
+        return post(url+'/facebook',{email: this.state.email, userid:this.state.userid, facebookID: this.state.facebookID});
     } else {
-        return post(url+'/google',{email: this.state.email, googleID: this.state.googleID});
+        return post(url+'/google',{email: this.state.email, userid:this.state.userid, googleID: this.state.googleID});
     }
   }
 
@@ -72,11 +74,13 @@ class Signin extends React.Component {
             console.log('asdfsadf'); 
             this.setState({
               email:'',
+              userid:'',
               password:'',
               showFailed:false,
               show:false,
             });
             $.cookie("login_email", response.data.email, { expires: 1 });
+            $.cookie("login_userid", response.data.userid, { expires: 1 });
             // window.sessionStorage.setItem('login_email', response.data.email);
             window.location.reload();
             // -- page reload & modal 종료(show=false)
@@ -86,7 +90,7 @@ class Signin extends React.Component {
             // -- Mypage 구성후 보여줘야 함.
           } else {// 로그인 실패
             console.log('asdfaaaaaaaasadf'); 
-            document.getElementById('email').style.border = '1px solid red';
+            document.getElementById('userid').style.border = '1px solid red';
             document.getElementById('password').style.border = '1px solid red';
             this.setState({
               email:'',
@@ -110,6 +114,7 @@ class Signin extends React.Component {
                 this.setState({
                   email:'',
                   password:'',
+                  userid:'',
                   signin:true,
                   facebookID:'',
                   googleID:'',
@@ -117,6 +122,7 @@ class Signin extends React.Component {
                   show:false,
                 });
                 $.cookie("login_email", response.data.email, { expires: 1 });
+                $.cookie("login_userid", response.data.userid, { expires: 1 });
                 // window.sessionStorage.setItem('login_email', response.data.email);
                 window.location.reload();
               } else {// 회원가입 실패
@@ -156,7 +162,9 @@ class Signin extends React.Component {
                 show:false,
               });
               $.cookie("login_email", response.data.email, { expires: 1 });
+              $.cookie("login_userid", response.data.userid, { expires: 1 });
               console.log($.cookie("login_email"));
+              
                 // window.sessionStorage.setItem('login_email', response.data.email);
               window.location.reload();
               // -- page reload & modal 종료(show=false)
@@ -192,6 +200,7 @@ class Signin extends React.Component {
                 show:false,
               });
               $.cookie("login_email", response.data.email, { expires: 1 });
+              $.cookie("login_userid", response.data.userid, { expires: 1 });
             // window.sessionStorage.setItem('login_email', response.data.email);
               window.location.reload();
               // -- page reload & modal 종료(show=false)
@@ -216,27 +225,33 @@ class Signin extends React.Component {
       <div>
         <button style={btnStyle} onClick={()=>{this.handleModal()}}>Sign In</button>
         <Modal show={this.state.show}>
-        <div align="right" style={{padding:"10px"}}>
-        <button type="button" className="close" aria-label="Close" onClick={()=>{this.handleModal()}}>
-         <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
+        <Modal.Header>
+            <div align="right" style={{padding:"10px"}}>
+            <button type="button" className="close" aria-label="Close" onClick={()=>{this.handleModal()}}>
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        </Modal.Header>
         <Modal.Body>
         <Form className="login-form" onSubmit={this.handleSignIn}>
           <h1 className="text-center">BEATING</h1>
           <h2 className="text-center">Welcome</h2>
           <FormGroup>
-            <Label>E-mail</Label>
-            <Input id='email' type="text" placeholder="E-mail" name="email" value={this.state.email} onChange={this.handleValueChange}/>
+            <Label>ID</Label>
+            <Input id='userid' type="text" placeholder="ID" name="userid" value={this.state.userid} onChange={this.handleValueChange}/>
           </FormGroup>
           {this.state.signin ?
             <FormGroup>
             <Label>Password</Label>
             <Input id='password' type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleValueChange}/>
             </FormGroup>
-            : null
+            :
+            <FormGroup>
+            <Label>E-mail</Label>
+            <Input id='email' type="text" placeholder="E-mail" name="email" value={this.state.email} onChange={this.handleValueChange}/>
+            </FormGroup>
           }
-          {this.state.duplicated ? <Label style={{color:"red"}}>There's a duplicate E-mail.</Label> : null}
+          {this.state.duplicated ? <Label style={{color:"red"}}>There's a duplicate ID.</Label> : null}
           {this.state.showFailed ? <Label style={{color:"red"}}>Please check your account again.</Label> : null}
           {this.state.signin ?
             <Button className="btn-lg btn-dark btn-block" type="submit">Sign In</Button> :

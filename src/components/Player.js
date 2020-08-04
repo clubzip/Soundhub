@@ -11,6 +11,7 @@ class Player extends React.Component {
     return (
         <div>
         <AudioPlayer
+            layout="horizontal"
             src={this.state.url}
             onPlay={e => console.log("onPlay")}
             // other props here

@@ -6,6 +6,7 @@ import Signin from './components/Signin';
 import Signout from './components/Signout';
 import Signup from './components/Signup';
 import Player from './components/Player';
+import Upload from './components/Upload';
 import CommitList from './components/CommitList';
 import $ from "jquery";
 import {} from "jquery.cookie";
@@ -15,7 +16,9 @@ import { post, get } from 'axios';
 
 class App extends React.Component {
   state = {
-    information:[]
+    commitlist:[],
+    requestlist:[],
+    adminlist:[]
   }
   componentDidMount(){
     const url = 'http://localhost:3001/api/project/detail';
@@ -23,7 +26,10 @@ class App extends React.Component {
     .then((response) => {
       console.log("commits")
       console.log(response.data.commits);
-      this.setState({information : response.data.commits});
+      this.setState({commitlist : response.data.commits});
+      this.setState({requestlist : response.data.requests});
+      this.setState({adminlist : response.data.admin});
+      
     })
   }
 
@@ -36,13 +42,21 @@ class App extends React.Component {
       logged = false;
     }
     console.log(logged);
-    const {information} = this.state;
+    const {commitlist, requestlist, adminlist} = this.state;
+  
     return (
 
       <div className="App">
         <Player projectID="testgroup" target="master"/>
         {logged? <Signout /> : <div><Signin /><Signup /></div>}
-        <CommitList projectID="testgroup" data={information}/>
+        <CommitList projectID="testgroup" data={commitlist}/>
+        {/* {adminlist.includes($.cookie("login_userid"))
+        ?
+        <RquestList projectID="testgroup" data={requestlist}/>
+        :
+        null
+        } */}
+        <Upload projectID="testgroup" userid={$.cookie("login_userid")}/>
       </div>
     )
   }

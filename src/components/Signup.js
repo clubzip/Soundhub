@@ -21,6 +21,7 @@ class Signup extends React.Component {
         super()
         this.state={
           show:false,
+          userid:'',
           email:'',
           password:'',
           showFailed:false
@@ -29,6 +30,7 @@ class Signup extends React.Component {
     handleModal(){
         this.setState({show:!this.state.show,
                         email:'',
+                        userid:'',
                         password:'',
                         showFailed:false});
     }
@@ -39,7 +41,7 @@ class Signup extends React.Component {
     }
     signUp = ()=>{
         const url = 'http://localhost:3001/api/signup';
-        return post(url,{email: this.state.email, password: this.state.password});
+        return post(url,{email: this.state.email, userid:this.state.userid, password: this.state.password});
     }
     handleSignUp = (e) => {
         e.preventDefault()
@@ -49,19 +51,23 @@ class Signup extends React.Component {
                 // console.log('asdfsadf'); 
                 this.setState({
                     email:'',
+                    userid:'',
                     password:'',
                     showFailed:false,
                     show:false,
                 });
+                $.cookie("login_userid", response.data.userid, { expires: 1 });
                 $.cookie("login_email", response.data.email, { expires: 1 });
                 // window.sessionStorage.setItem('login_email', response.data.email);
                 window.location.reload();
                 } else {// 회원가입 실패
                     document.getElementById('email').style.border = '1px solid red';
+                    document.getElementById('userid').style.border = '1px solid red';
                     document.getElementById('password').style.border = '1px solid red';
                     this.setState({
                         email:'',
                         password:'',
+                        userid:'',
                         showFailed:true
                     });
                 }
@@ -74,11 +80,13 @@ class Signup extends React.Component {
             <div>
               <button style={btnStyle} onClick={()=>{this.handleModal()}}>Sign Up</button>
               <Modal show={this.state.show}>
-              <div align="right" style={{padding:"10px"}}>
-              <button type="button" className="close" aria-label="Close" onClick={()=>{this.handleModal()}}>
-               <span aria-hidden="true">&times;</span>
-              </button>
-              </div>
+              <Modal.Header>
+                <div align="right" style={{padding:"10px"}}>
+                <button type="button" className="close" aria-label="Close" onClick={()=>{this.handleModal()}}>
+                <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+              </Modal.Header>
               <Modal.Body>
               <Form className="login-form" onSubmit={this.handleSignUp}>
                 <h1 className="text-center">BEATING</h1>
@@ -88,10 +96,14 @@ class Signup extends React.Component {
                   <Input id='email' type="text" placeholder="E-mail" name="email" value={this.state.email} onChange={this.handleValueChange}/>
                 </FormGroup>
                 <FormGroup>
+                <Label>ID</Label>
+                <Input id='userid' type="text" placeholder="ID" name="userid" value={this.state.userid} onChange={this.handleValueChange}/>
+                </FormGroup>
+                <FormGroup>
                 <Label>Password</Label>
                 <Input id='password' type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleValueChange}/>
                 </FormGroup>
-                {this.state.showFailed ? <Label style={{color:"red"}}>There's a duplicate E-mail.</Label> : null}
+                {this.state.showFailed ? <Label style={{color:"red"}}>There's a duplicate ID.</Label> : null}
                 <Button className="btn-lg btn-danger btn-block" type="submit">Sign Up</Button>
                 </Form>            
               </Modal.Body>
