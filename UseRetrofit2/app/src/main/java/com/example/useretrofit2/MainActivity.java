@@ -12,6 +12,7 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -22,9 +23,13 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.useretrofit2.myproject.MyProjectActivity;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -58,18 +63,50 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity{
 
     private String AppName = "AppName";
+    private ListView listView;
+    private ListViewCustomAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         tedPermission();
-
+/*
         Button RecordButton = (Button) findViewById(R.id.recordPageBtn);
         Button ListButton = (Button) findViewById(R.id.ListPageBtn);
         Button downloadButton = (Button) findViewById(R.id.downloadBtn);
+*/
 
+        listView = (ListView) findViewById(R.id.lv_explore);
+        adapter = new ListViewCustomAdapter();
+        ImageView my_page = (ImageView) findViewById(R.id.imageView_mypage);
+
+        ListViewCustomDTO sample = new ListViewCustomDTO();
+        sample.setName("Sample Project 1");
+        adapter.addItem(sample);
+
+        my_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MyProjectActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+/*
         RecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,10 +133,9 @@ public class MainActivity extends AppCompatActivity{
                 Intent intent = new Intent(getApplicationContext(), ServerFileListActivity.class);
                 startActivity(intent);
 
-                //downLoad2App down2app = (downLoad2App) new downLoad2App().execute("/sdcard/AppName/New_Recordiop.mp4");
             }
         });
-
+*/
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("checkFirst", getApplicationContext().MODE_PRIVATE);
         boolean checkFirst = pref.getBoolean("checkFirst", false);
@@ -110,6 +146,13 @@ public class MainActivity extends AppCompatActivity{
             File dir = new File("/sdcard/" + AppName);
             if(!dir.exists()) dir.mkdirs();
         }
+
+
+
+
+
+
+        listView.setAdapter(adapter);
 
 
     }
