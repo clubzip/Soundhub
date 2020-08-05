@@ -12,6 +12,11 @@ class Commit extends React.Component {
         url: "/"+this.props.projectID+"/"+this.props.commitID+".mp3",
         check: false
       } 
+      componentDidMount(){
+        if(this.props.master){
+          this.setState({url: "/"+this.props.projectID+"/master.mp3"})
+        }
+      }
 
       onCheckBox=(e)=>{ // request냐 commit이냐에 따라 onCheck, onUncheck로 주어지는 게 다름.
           if(this.state.check){
@@ -19,19 +24,23 @@ class Commit extends React.Component {
             //checked->unchecked
             this.setState({check:false})
             //onUncheck로넘겨받은 commitItemUnchecked or requestItemUnchecked 이용
-            this.props.onUncheck(this.props.commitID)
+            if(this.props.type==='commit'){
+              this.props.onUncheck(this.props.commitID)
+            } else {this.props.onUncheck(this.props.commitID, this.props.artistID)}
+            
           } else {
             console.log('commit unchecked->checked')
             //unchecked->checked
             this.setState({check:true})
             //onCheck로넘겨받은 commitItemChecked or requestItemChecked 이용
-            this.props.onCheck(this.props.commitID)
+            if(this.props.type==='commit'){
+              this.props.onCheck(this.props.commitID)
+            } else {this.props.onCheck(this.props.commitID, this.props.artistID)}
           }
       }
       
+      
       render() {
-
-        
         const style = {
           borderRadius: '10px',
           backgroundColor: 'black',
