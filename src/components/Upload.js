@@ -155,14 +155,17 @@ const btnStyle = {
         
         for (let i = 0; i < validFiles.length; i++) {
             const formData = new FormData();
+            
             formData.append('key', '');
             formData.append('userid', props.userid);
             formData.append('commitID', commitID);
             formData.append('category', category);
             formData.append('projectID', props.projectID);
             formData.append('files', validFiles[i]);
+            
 
             axios.post('http://localhost:3001/api/upload', formData, {
+                headers:{'content-type': 'multipart/form-data'},
                 onUploadProgress: (progressEvent) => {
                     const uploadPercentage = Math.floor((progressEvent.loaded / progressEvent.total) * 100);
                     progressRef.current.innerHTML = `${uploadPercentage}%`;
@@ -175,11 +178,10 @@ const btnStyle = {
                         setSelectedFiles([...validFiles]);
                         setUnsupportedFiles([...validFiles]);
                     }
-                },
-                headers:{'content-type': 'multipart/form-data'}
+                }
             })
             .catch(() => {
-                uploadRef.current.innerHTML = `<span class="error">Error Uploading File(s)</span>`;
+                uploadRef.current.innerHTML = `<span class="err-or">Error Uploading File(s)</span>`;
                 progressRef.current.style.backgroundColor = 'red';
             })
         }

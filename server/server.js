@@ -10,10 +10,9 @@ const cors = require('cors');
 
 var mongoose    = require('mongoose');
 //////////////////////////
-var multer, path, crypto;
-multer = require('multer')
-path = require('path');
-crypto = require('crypto');
+var multer = require('multer');
+var path = require('path');
+
 /////////////////////////
 
 // CONNECT TO MONGODB SERVER
@@ -42,8 +41,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 var User = require('./models/user');
 var Project = require('./models/project');
-var SoxCommand = require('sox-audio');
-var router = require('./routes')(app, User, Project, storage, multer, path, SoxCommand);
+var router = require('./routes')(app, User, Project, storage, multer,path);
 
 
 app.listen(port, () => console.log(`Node.js Server is running on port ${port}...`));

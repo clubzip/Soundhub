@@ -1,18 +1,37 @@
 import React from 'react';
-import '../App.css';
-import Player from './Player';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 
 class Commit extends React.Component {
-    // static defaultProps = {
-    //     info: {
-    //       name: '이름',
-    //       phone: '010-0000-0000',
-    //       id: 0
-    //     },
-    //   }
+      constructor(props){
+        super(props);
+        this.player =React.createRef();
+      }
+      state = {
+        url: "/"+this.props.projectID+"/"+this.props.commitID+".mp3",
+        check: false
+      } 
+
+      onCheckBox=(e)=>{ // request냐 commit이냐에 따라 onCheck, onUncheck로 주어지는 게 다름.
+          if(this.state.check){
+            console.log('commit checked->unchecked')
+            //checked->unchecked
+            this.setState({check:false})
+            //onUncheck로넘겨받은 commitItemUnchecked or requestItemUnchecked 이용
+            this.props.onUncheck(this.props.commitID)
+          } else {
+            console.log('commit unchecked->checked')
+            //unchecked->checked
+            this.setState({check:true})
+            //onCheck로넘겨받은 commitItemChecked or requestItemChecked 이용
+            this.props.onCheck(this.props.commitID)
+          }
+      }
+      
       render() {
-        console.log(this.props.commitID);    
+
+        
         const style = {
           borderRadius: '10px',
           backgroundColor: 'black',
@@ -23,10 +42,16 @@ class Commit extends React.Component {
         
         return (
           <div style={style}>
-            <div>{this.props.commitID}</div>
+            <div>{this.props.commitID}<input type="checkbox" onClick={this.onCheckBox}></input></div>
             <div style={{fontSize: '20px', textAlign:'right'}}>{this.props.artistID}</div>
             <div style={{fontSize: '20px', textAlign:'right'}}>{this.props.category}</div>
-            <Player projectID={this.props.projectID} target={this.props.commitID}/>
+            <AudioPlayer
+            ref={this.player}
+            layout="horizontal"
+            src={this.state.url}
+            onPlay={e => console.log("onPlay")}
+            // other props here
+            />
           </div>
         );
       }
