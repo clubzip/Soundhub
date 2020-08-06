@@ -59,7 +59,8 @@ class Commit extends React.Component {
           backgroundColor: 'black',
           color: 'white',
           padding: '8px',
-          margin: '8px'
+          margin: '8px',
+          width: '800px'
         };
         
         return (

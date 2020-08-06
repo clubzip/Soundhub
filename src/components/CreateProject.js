@@ -168,6 +168,10 @@ const btnStyle = {
             formData.append('category', category);
             formData.append('files', validFiles[i]);
             
+            fetch('http://localhost:3001/api/create/project',{
+                method:'post',
+                body:formData
+            })
             
             axios.post('http://localhost:3001/api/create/project', formData, {
                 headers:{'content-type': 'multipart/form-data'},
