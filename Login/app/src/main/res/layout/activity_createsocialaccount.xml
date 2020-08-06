@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="350dp"
+    android:layout_gravity="center"
+    android:background="@drawable/createaccount_container"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+        <TextView
+            android:paddingTop="20dp"
+            android:textStyle="italic"
+            android:text="WELCOME TO BEATING"
+            android:textSize="30sp"
+            android:fontFamily="@font/bm"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="90dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="310dp"
+        android:layout_gravity="center"
+        android:background="@color/blue"
+        android:layout_height="2dp" />
+
+    <EditText
+        android:id="@+id/create_id"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginVertical="15dp"
+        android:layout_width="match_parent"
+        android:textColor="@color/blue"
+        android:background="@drawable/createaccount_container"
+        android:layout_height="80dp"
+        android:fontFamily="@font/bm"
+        android:gravity="center"
+        android:textColorHint="@color/blue"
+        android:hint="User ID"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/create_email"
+        android:layout_marginHorizontal="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/createaccount_container"
+        android:textColor="@color/blue"
+        android:textColorHint="@color/blue"
+        android:fontFamily="@font/bm"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:hint="User Email"
+        android:textSize="20dp" />
+
+    <View
+        android:layout_width="310dp"
+        android:layout_gravity="center"
+        android:background="@color/blue"
+        android:layout_height="2dp" />
+
+
+    <Button
+        android:text="Create"
+        android:fontFamily="@font/bm"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textColor="@color/blue"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:layout_height="50dp"
+        android:onClick="mOnClose"/>
+
+
+</LinearLayout>

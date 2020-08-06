@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/splashTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="60dp"
+        android:layout_marginTop="210dp"
+        android:fontFamily="@font/bm"
+        android:textColor="#FFAA75"
+        android:textStyle="bold"
+        android:text="SoundHub"/>
+
+    <ImageView
+        android:id="@+id/loading_view"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:src="@raw/loading_gif"
+        android:foregroundGravity="center" />
+
+
+</LinearLayout>

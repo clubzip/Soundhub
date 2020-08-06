@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "642506649278",
+    "firebase_url": "https://soundhub-madcamp.firebaseio.com",
+    "project_id": "soundhub-madcamp",
+    "storage_bucket": "soundhub-madcamp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642506649278:android:9e0d65bf3262c6a16ff8ef",
+        "android_client_info": {
+          "package_name": "com.example.login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642506649278-aglhqoqsh0pt4upq3o5cdilq9imi6626.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjpicSKvJOiTUFoH4bj8QjkuXlbiPoZ3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642506649278-aglhqoqsh0pt4upq3o5cdilq9imi6626.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
