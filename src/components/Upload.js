@@ -129,6 +129,8 @@ const btnStyle = {
         return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length) || fileName;
     }
 
+    
+
     const removeFile = (name) => {
         const index = validFiles.findIndex(e => e.name === name);
         const index2 = selectedFiles.findIndex(e => e.name === name);

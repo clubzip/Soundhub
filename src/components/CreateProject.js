@@ -168,7 +168,7 @@ const btnStyle = {
             formData.append('category', category);
             formData.append('files', validFiles[i]);
             
-
+            
             axios.post('http://localhost:3001/api/create/project', formData, {
                 headers:{'content-type': 'multipart/form-data'},
                 onUploadProgress: (progressEvent) => {
