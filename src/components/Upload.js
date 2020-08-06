@@ -8,11 +8,12 @@ import {} from "jquery.cookie";
 
 
 const btnStyle = {
-    color: "white",
-    background: "teal",
+    color: "black",
+    fontWeight:"bold",
+    background: "#F5DEB3",
     padding: ".375rem .75rem",
-    border: "1px solid teal",
-    borderRadius: ".25rem",
+    border: "none",
+    borderRadius: ".45rem",
     fontSize: "1rem",
     lineHeight: 1.5,
   }
@@ -195,7 +196,7 @@ const btnStyle = {
 
     return (
         <div>
-            <button style={btnStyle} onClick={() => handleModal()}>Stack your Track</button>
+            <button style={btnStyle} onClick={() => handleModal()}>COMMIT</button>
             <Modal show={show}>
                 <Modal.Header>
                     {/* 닫기 버튼 */}

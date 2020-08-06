@@ -8,12 +8,30 @@
 }
 
 
-
-.App {
-  color: aqua;
-  font-size: 36px;
-  font-weight: 600;
+.site-content {
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  width: 75%;
+  float: right;
 }
+
+.site-header {
+  background: #222222;
+  color:white;
+  padding: 1.5em;
+  position: fixed;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.greytext{
+  color:#DCDCDC;
+}
+
 
 /* 
 .App-logo {

@@ -60,12 +60,12 @@ class Commit extends React.Component {
           color: 'white',
           padding: '8px',
           margin: '8px',
-          width: '800px'
+          width: '600px'
         };
         
         return (
           <div style={style}>
-            <div>{this.props.commitID}<input type="checkbox" onClick={this.onCheckBox}></input></div>
+            <div style={{display:'flex'}}><span style={{float:'left', fontSize: '30px'}}>{this.props.commitID}</span><span style={{marginLeft:'auto', marginRight:'0px'}}><input style={{width:'25px', height:'25px'}}type="checkbox" onClick={this.onCheckBox}></input></span></div>
             <div style={{fontSize: '20px', textAlign:'right'}}>{this.props.artistID}</div>
             <div style={{fontSize: '20px', textAlign:'right'}}>{this.props.category}</div>
             <AudioPlayer

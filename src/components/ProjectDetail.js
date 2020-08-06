@@ -4,6 +4,17 @@ import $ from "jquery";
 import {} from "jquery.cookie";
 import { post } from 'axios';
 
+const btnStyle = {
+  color: "white",
+  background: "black",
+  padding: ".375rem .75rem",
+  border: "1px solid",
+  borderRadius: ".90rem",
+  margin:"10px",
+  fontSize: "1rem",
+  lineHeight: 1.5,
+}
+
 class ProjectDetail extends Component {
   //projectID를 props로 받아야 함.
   state = {
@@ -194,49 +205,50 @@ class ProjectDetail extends Component {
 
     return (
       <div>
-        {/* Master player */}
-        <div>
-          <Commit
-            last_update={this.state.last_update}
-            master={true}
-            onCheck={this.commitItemChecked}
-            onUncheck={this.commitItemUnchecked}
-            ref={(instance)=>{this.state.refsCollection['Master'] = instance}}
-            commitID='Master'
-            projectID={this.props.projectID}
-            artistID={adminstring}
-            category={this.props.projectID}
-          />
-        </div>
+        {/* Master */}
+          <div>
+            <Commit
+              last_update={this.state.last_update}
+              master={true}
+              onCheck={this.commitItemChecked}
+              onUncheck={this.commitItemUnchecked}
+              ref={(instance)=>{this.state.refsCollection['Master'] = instance}}
+              commitID='Master'
+              projectID={this.props.projectID}
+              artistID={adminstring}
+              category={this.props.projectID}
+            />
+          </div>
+          
 
         {/* Commit list */}
-        <div>
-          Commit list
-          {CommitList}
+        <div style={{ fontStyle:"italic", fontSize: "3rem", margin:"8px", width:"600px", display: "flex", justifyContent:"center" }}>
+          COMMITS
         </div>
-        
+        {CommitList}
+        {/* Master player */}
+        <div style={{margin:"8px", width:"600px", display: "flex", justifyContent:"center" }}>
+            <button style={btnStyle} onClick={this.playClicked}>PLAY</button>
+            <button style={btnStyle} onClick={this.pauseClicked}>PAUSE</button>
+            <button style={btnStyle} onClick={this.resetClicked}>RESET</button>          
+          </div>
         {/* Request list */}
         {
         this.state.adminlist.includes($.cookie("login_userid"))
         ?
-        <div>Request list{RequestList}</div>
+        <div><span style={{ fontStyle:"italic", fontSize: "3rem", margin:"8px", width:"600px", display: "flex", justifyContent:"center" }}>REQUESTS</span>{RequestList}</div>
         :
         null
         }
         
-        {/* Master player */}
-        <div>
-          <button onClick={this.playClicked}>play</button>
-          <button onClick={this.pauseClicked}>pause</button>
-          <button onClick={this.resetClicked}>reset</button>          
-        </div>
+        
         {/* Administrator's project manager */}
         {
           this.state.adminlist.includes($.cookie("login_userid"))
           ?
-          <div>
-          <button onClick={this.acceptClicked}>accept</button>
-          <button onClick={this.rejectClicked}>reject</button>
+          <div style={{margin:"8px", width:"600px", display: "flex", justifyContent:"center" }}>
+          <button style={btnStyle} onClick={this.acceptClicked}>ACCEPT</button>
+          <button style={btnStyle} onClick={this.rejectClicked}>REJECT</button>
           </div>
           :
           null
