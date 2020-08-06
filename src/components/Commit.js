@@ -24,7 +24,9 @@ class Commit extends React.Component {
         {
           this.setState({url: "/"+this.props.projectID+"/master_"+this.props.last_update.getTime()+".mp3"})
           console.log(this.props.last_update.getTime());
+          this.player.current.audio.current.pause();
         }
+        
       }
 
 
@@ -51,6 +53,7 @@ class Commit extends React.Component {
       
       
       render() {
+        
         const style = {
           borderRadius: '10px',
           backgroundColor: 'black',
@@ -65,6 +68,7 @@ class Commit extends React.Component {
             <div style={{fontSize: '20px', textAlign:'right'}}>{this.props.artistID}</div>
             <div style={{fontSize: '20px', textAlign:'right'}}>{this.props.category}</div>
             <AudioPlayer
+            autoPlay={false}
             ref={this.player}
             layout="horizontal"
             src={this.state.url}

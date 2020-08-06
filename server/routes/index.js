@@ -141,12 +141,17 @@ module.exports = function(router,User, Project, storage, multer)
                 const NodeCrunker = require('node-crunker');
                 const audio = new NodeCrunker();
                 console.log(now)
-                console.log(result.last_update)
-                
+                console.log(result.last_update.getTime())
+                var fs =require('fs');
                 await audio
-                    .fetchAudio('http://localhost:3000/'+req.body.projectID+'/master_'+result.last_update+'.mp3','http://localhost:3000/'+req.body.projectID+'/'+req.body.commitID+'.mp3')
+                    .fetchAudio('http://localhost:3000/'+req.body.projectID+'/master_'+result.last_update.getTime()+'.mp3','http://localhost:3000/'+req.body.projectID+'/'+req.body.commitID+'.mp3')
                     .then(buffers => audio.mergeAudio(buffers))
-                    .then(merged => audio.export(merged, './public/'+req.body.projectID+'/master_'+now+'.mp3'))
+                    .then(merged => {
+                        audio.export(merged, './public/'+req.body.projectID+'/master_'+now+'.mp3')
+                        fs.unlink(`./public/${result.projectID}/master_${result.last_update.getTime()}.mp3`,(err)=>{
+                            console.log(err);
+                        }) 
+                    })
                     .catch(error => {
                         console.log(error);
                     });
@@ -201,31 +206,14 @@ module.exports = function(router,User, Project, storage, multer)
             // commitID가 request.commitID인 객체를 requests와 request_list에서
             // 뽑아서 commits와 commit_list에 push
 
+            var last_update;
+            var now = Date.now()
             // master.mp3랑 합치기
-            const NodeCrunker = require('node-crunker');
-            const audio = new NodeCrunker();
-            
-            await User.findOne({userid:request.artistID})
-            .then((doc) => {
-                var index = doc.request_list.findIndex(p=>p.commitID == request.commitID);
-                console.log(index)
-                console.log('user'+request.commitID);
-                User.update({userid:request.artistID},
-                    {$pull:{request_list:{commitID:request.commitID}},$push:{commit_list:doc.request_list[index]}},
-                    function(err, result){
-                        console.log(result);
-                    });
-            });
+            var fs = require('fs');
+
             await Project.findOne({projectID:projectID})
             .then((doc) => {
-                var now = Date.now()
-                audio
-                    .fetchAudio('http://localhost:3000/'+projectID+'/master_'+doc.last_update+'.mp3','http://localhost:3000/'+projectID+'/'+request.commitID+'.mp3')
-                    .then(buffers => audio.mergeAudio(buffers))
-                    .then(merged => audio.export(merged, './public/'+projectID+'/master_'+now+'.mp3'))
-                    .catch(error => {
-                        console.log(error);
-                });  
+                last_update = doc.last_update;
                 var index = doc.requests.findIndex(p=>p.commitID == request.commitID);
                 console.log(index)
                 console.log('project'+request.commitID);
@@ -238,6 +226,35 @@ module.exports = function(router,User, Project, storage, multer)
                         console.log(result);
                     });
                 });
+                
+            const NodeCrunker = require('node-crunker');
+            const audio = new NodeCrunker();
+            await audio
+                .fetchAudio('http://localhost:3000/'+projectID+'/master_'+last_update.getTime()+'.mp3','http://localhost:3000/'+projectID+'/'+request.commitID+'.mp3')
+                .then(buffers => audio.mergeAudio(buffers))
+                .then(merged => {
+                    console.log(`lastUpdated: ${last_update.getTime()}`)
+                    audio.export(merged, './public/'+projectID+'/master_'+now+'.mp3')
+                    fs.unlink(`./public/${projectID}/master_${last_update.getTime()}.mp3`,(err)=>{
+                        console.log(err);
+                    }) 
+                })
+                .catch(error => {
+                    console.log(error);
+            }); 
+            await User.findOne({userid:request.artistID})
+            .then((doc) => {
+                var index = doc.request_list.findIndex(p=>p.commitID == request.commitID);
+                console.log(index)
+                console.log('user'+request.commitID);
+                User.update({userid:request.artistID},
+                    {$pull:{request_list:{commitID:request.commitID}},$push:{commit_list:doc.request_list[index]}},
+                    function(err, result){
+                        console.log(result);
+                    });
+            });
+            
+            
             
         }  
     });
