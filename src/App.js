@@ -31,8 +31,8 @@ class App extends React.Component {
 
       <div className="App">
         {logged? <Signout /> : <div><Signin /><Signup /></div>}
-        <ProjectDetail projectID="Muse_Hysteria"/>
-        <Upload projectID="Muse_Hysteria" userid={$.cookie("login_userid")}/>
+        {/* <ProjectDetail projectID="Muse_Hysteria"/>
+        <Upload projectID="Muse_Hysteria" userid={$.cookie("login_userid")}/> */}
         <CreateProject userid={$.cookie("login_userid")}/>
       </div>
     )

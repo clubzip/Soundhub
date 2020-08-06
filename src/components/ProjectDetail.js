@@ -34,6 +34,7 @@ class ProjectDetail extends Component {
     console.log(this.state.clickedlist)
     console.log(this.state.requestlist)
   }
+  
 
   commitItemChecked = (commitID) => {
     

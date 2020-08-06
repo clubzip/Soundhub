@@ -137,7 +137,7 @@ module.exports = function(router,User, Project, storage, multer)
             if(result.admin.includes(req.body.userid)) {
                 var now = Date.now();
                 
-                // 1. master.mp3랑 합치기
+                // 1. master.wav랑 합치기
                 const NodeCrunker = require('node-crunker');
                 const audio = new NodeCrunker();
                 console.log(now)
@@ -208,7 +208,7 @@ module.exports = function(router,User, Project, storage, multer)
 
             var last_update;
             var now = Date.now()
-            // master.mp3랑 합치기
+            // master.wav랑 합치기
             var fs = require('fs');
 
             await Project.findOne({projectID:projectID})
@@ -226,7 +226,7 @@ module.exports = function(router,User, Project, storage, multer)
                         console.log(result);
                     });
                 });
-                
+
             const NodeCrunker = require('node-crunker');
             const audio = new NodeCrunker();
             await audio

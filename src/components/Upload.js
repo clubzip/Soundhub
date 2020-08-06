@@ -107,7 +107,7 @@ const btnStyle = {
     }
 
     const validateFile = (file) => {
-        const validTypes = ['audio/mpeg'];
+        const validTypes = ['audio/mpeg','audio/wav'];
         if (validTypes.indexOf(file.type) === -1) {
             return false;
         }
