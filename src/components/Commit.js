@@ -14,9 +14,19 @@ class Commit extends React.Component {
       } 
       componentDidMount(){
         if(this.props.master){
-          this.setState({url: "/"+this.props.projectID+"/master.mp3"})
+          console.log(typeof this.props.last_update)
+          this.setState({url: "/"+this.props.projectID+"/master_"+this.props.last_update.getTime()+".mp3"})
+          console.log(this.props.last_update.getTime());
         }
       }
+      componentDidUpdate(prevProps) {
+        if(this.props.last_update !== prevProps.last_update) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
+        {
+          this.setState({url: "/"+this.props.projectID+"/master_"+this.props.last_update.getTime()+".mp3"})
+          console.log(this.props.last_update.getTime());
+        }
+      }
+
 
       onCheckBox=(e)=>{ // request냐 commit이냐에 따라 onCheck, onUncheck로 주어지는 게 다름.
           if(this.state.check){

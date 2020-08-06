@@ -3,10 +3,18 @@
 
 module.exports = function(router,User, Project, storage, multer)
 {
-
+    //프로젝트 상세페이지
     router.post('/api/project/detail', (req, res) => {
         console.log(req.body.projectID);
         Project.findOne({projectID:req.body.projectID}, function(err, result){
+            res.json(result);
+        })
+    });
+
+    //마이페이지
+    router.post('/api/user/detail', (req, res) => {
+        console.log(req.body.projectID);
+        User.findOne({userid:req.body.userid}, function(err, result){
             res.json(result);
         })
     });
@@ -82,19 +90,21 @@ module.exports = function(router,User, Project, storage, multer)
 
     router.post('/api/create/project', multer({storage:storage}).single('files'), async (req,res)=>{
         console.log('routing start'+req.body.projectID);
+        var now = Date.now()
+        console.log(now)
         // multer로 projectID directory 자동 생성 후({dest:'~'}) commitID로 저장.
         // master.mp3 copy
         var fs = require('fs');
         var projectID = req.body.projectID;
         var commitID = req.body.commitID
         var userid = req.body.userid;
-        fs.copyFile(`./public/${projectID}/${commitID}.mp3`,`./public/${projectID}/master.mp3`, (err) => {
+        fs.copyFile(`./public/${projectID}/${commitID}.mp3`,`./public/${projectID}/master_${now}.mp3`, (err) => {
             if (err) console.log(err);
             console.log('master.mp3 copied');
         });
         // project 문서 생성.(commits 포함)
         console.log('routing after fs');
-        var now = Date.now()
+        
         var newproject = new Project();
         var commit = {date:now, artistID:userid, commitID:commitID, category: req.body.category};
         newproject.projectID = projectID;
@@ -122,11 +132,26 @@ module.exports = function(router,User, Project, storage, multer)
     router.post('/api/upload', multer({storage:storage}).single('files'), async (req, res) => {
         console.log('here');
         console.log(req.body.commitID);
-        Project.findOne({projectID:req.body.projectID} , function(err, result) {
+        Project.findOne({projectID:req.body.projectID} , async function(err, result) {
             console.log('hhhhhhhhheeeeerrrr');
             if(result.admin.includes(req.body.userid)) {
                 var now = Date.now();
-                //1. Project commits에 {date:, artistID:, commitID, category} 추가 & project lastupdated 수정
+                
+                // 1. master.mp3랑 합치기
+                const NodeCrunker = require('node-crunker');
+                const audio = new NodeCrunker();
+                console.log(now)
+                console.log(result.last_update)
+                
+                await audio
+                    .fetchAudio('http://localhost:3000/'+req.body.projectID+'/master_'+result.last_update+'.mp3','http://localhost:3000/'+req.body.projectID+'/'+req.body.commitID+'.mp3')
+                    .then(buffers => audio.mergeAudio(buffers))
+                    .then(merged => audio.export(merged, './public/'+req.body.projectID+'/master_'+now+'.mp3'))
+                    .catch(error => {
+                        console.log(error);
+                    });
+
+                //2. Project commits에 {date:, artistID:, commitID, category} 추가 & project lastupdated 수정
                 console.log("upload admin branch");
                 var commit_project = {date: now, artistID:req.body.userid, commitID:req.body.commitID, category:req.body.category}
                 console.log(commit_project);
@@ -138,19 +163,7 @@ module.exports = function(router,User, Project, storage, multer)
                         console.log(result);
                     }
                 });
-                // 2. master.mp3랑 합치기
-                const NodeCrunker = require('node-crunker');
-                const audio = new NodeCrunker();
-                // var absolute1 = path.resolve('../../public/'+req.body.projectID+'/master.mp3');
-                // var absolute2 = path.resolve('../../public/'+req.body.projectID+'/'+req.body.commitID+'.mp3')
 
-                audio
-                    .fetchAudio('http://localhost:3000/'+req.body.projectID+'/master.mp3','http://localhost:3000/'+req.body.projectID+'/'+req.body.commitID+'.mp3')
-                    .then(buffers => audio.mergeAudio(buffers))
-                    .then(merged => audio.export(merged, './public/'+req.body.projectID+'/master.mp3'))
-                    .catch(error => {
-                        console.log(error);
-                    });               
                 //3. User의 commit_list에 {projectID:String, commitID: String, category: String, date:Date} 추가
                 var commit_user = {date: now, projectID:req.body.projectID, commitID:req.body.commitID, category:req.body.category}
                 User.update({userid:req.body.userid},{$push:{commit_list:commit_user}}, function(err, result){
@@ -187,6 +200,10 @@ module.exports = function(router,User, Project, storage, multer)
         for(var request of acceptlist){//request:{artistID:"", commitID:""}
             // commitID가 request.commitID인 객체를 requests와 request_list에서
             // 뽑아서 commits와 commit_list에 push
+
+            // master.mp3랑 합치기
+            const NodeCrunker = require('node-crunker');
+            const audio = new NodeCrunker();
             
             await User.findOne({userid:request.artistID})
             .then((doc) => {
@@ -201,6 +218,14 @@ module.exports = function(router,User, Project, storage, multer)
             });
             await Project.findOne({projectID:projectID})
             .then((doc) => {
+                var now = Date.now()
+                audio
+                    .fetchAudio('http://localhost:3000/'+projectID+'/master_'+doc.last_update+'.mp3','http://localhost:3000/'+projectID+'/'+request.commitID+'.mp3')
+                    .then(buffers => audio.mergeAudio(buffers))
+                    .then(merged => audio.export(merged, './public/'+projectID+'/master_'+now+'.mp3'))
+                    .catch(error => {
+                        console.log(error);
+                });  
                 var index = doc.requests.findIndex(p=>p.commitID == request.commitID);
                 console.log(index)
                 console.log('project'+request.commitID);
@@ -208,22 +233,12 @@ module.exports = function(router,User, Project, storage, multer)
                     {
                         $pull:{requests:{commitID:request.commitID}},
                         $push:{commits:doc.requests[index]},
-                        $set:{last_update:Date.now()}
+                        $set:{last_update:now}
                     }, function(err, result){
                         console.log(result);
                     });
                 });
-            // master.mp3랑 합치기
-            const NodeCrunker = require('node-crunker');
-            const audio = new NodeCrunker();
-
-            await audio
-                .fetchAudio('http://localhost:3000/'+projectID+'/master.mp3','http://localhost:3000/'+projectID+'/'+request.commitID+'.mp3')
-                .then(buffers => audio.mergeAudio(buffers))
-                .then(merged => audio.export(merged, './public/'+projectID+'/master.mp3'))
-                .catch(error => {
-                    console.log(error);
-            });  
+            
         }  
     });
 

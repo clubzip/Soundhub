@@ -13,7 +13,7 @@ class ProjectDetail extends Component {
     adminlist:[],
     clickedlist:[],
     request_clickedlist:[],
-    url: "/"+this.props.projectID+"/master.mp3",
+    last_update:new Date('2020/01/01'),
     refsCollection : {}
   }
   
@@ -22,12 +22,14 @@ class ProjectDetail extends Component {
     const url = 'http://localhost:3001/api/project/detail';
     post(url,{projectID:this.props.projectID})
     .then((response) => {
-      console.log("commits")
-      console.log(response.data.commits);
+      console.log(response.data.last_update);
       this.setState({commitlist : response.data.commits});
       this.setState({requestlist : response.data.requests});
       this.setState({adminlist : response.data.admin});
+      this.setState({last_update : new Date(response.data.last_update)})
+      console.log(this.state.last_update)
     })
+    
     console.log(this.state.refsCollection)
     console.log(this.state.clickedlist)
     console.log(this.state.requestlist)
@@ -194,6 +196,7 @@ class ProjectDetail extends Component {
         {/* Master player */}
         <div>
           <Commit
+            last_update={this.state.last_update}
             master={true}
             onCheck={this.commitItemChecked}
             onUncheck={this.commitItemUnchecked}
