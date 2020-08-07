@@ -18,13 +18,13 @@
             android:id="@+id/project_list_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="15dp"
             android:fontFamily="@font/bm"
             android:text="Title"
             android:textColor="@color/blue"
-            android:textSize="37dp"
+            android:textSize="21dp"
             android:textStyle="italic"/>
 
         <TextView
@@ -50,7 +50,7 @@
             android:fontFamily="@font/bm"
             android:textColor="@color/blue"
             android:textStyle="italic"
-            android:textSize="10dp"
+            android:textSize="14dp"
             android:layout_marginLeft="20dp" />
 
         <TextView
@@ -59,10 +59,11 @@
             android:layout_marginRight="10dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="15dp"
             android:fontFamily="@font/bm"
             android:text="Recent Update"
             android:textColor="@color/blue"
-            android:textSize="13dp"
+            android:textSize="12dp"
             android:textStyle="italic"
             android:layout_marginLeft="20dp"/>
 
@@ -80,7 +81,7 @@
             android:padding="15dp"
             android:thumb="@drawable/thumb"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -100,7 +101,7 @@
             <ImageButton
                 android:id="@+id/myproject_list_play"
                 android:layout_width="20dp"
-                android:layout_marginLeft="48dp"
+                android:layout_marginLeft="30dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"

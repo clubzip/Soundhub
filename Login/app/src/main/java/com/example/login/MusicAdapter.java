@@ -54,7 +54,7 @@ public class MusicAdapter extends BaseAdapter {
 
             holder.textName = (TextView) convertView.findViewById(R.id.tv_title);
             holder.textAdmin = (TextView) convertView.findViewById(R.id.tv_admin);
-            holder.textInst = (TextView) convertView.findViewById(R.id.tv_instruments);
+            //holder.textInst = (TextView) convertView.findViewById(R.id.tv_instruments);
             holder.textUpdate = (TextView) convertView.findViewById(R.id.tv_recent);
 
             holder.play = (ImageView) convertView.findViewById(R.id.play_stop);
@@ -87,7 +87,7 @@ public class MusicAdapter extends BaseAdapter {
 
         holder.textName.setText(dto.getName());
         holder.textAdmin.setText(dto.getAdmin());
-        holder.textInst.setText(dto.getInst());
+        //holder.textInst.setText(dto.getInst());
         holder.textUpdate.setText(dto.getUpdate());
 
         holder.mediaPlayer = dto.getMediaPlayer();

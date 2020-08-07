@@ -50,7 +50,7 @@ public class RequestsListAdapter extends BaseAdapter{
 
             holder.textName = (TextView) convertView.findViewById(R.id.project_request_list_title);
             holder.textAdmin = (TextView) convertView.findViewById(R.id.tv_request_admin);
-            holder.textInst = (TextView) convertView.findViewById(R.id.tv_request_instruments);
+            //holder.textInst = (TextView) convertView.findViewById(R.id.tv_request_instruments);
             holder.textUpdate = (TextView) convertView.findViewById(R.id.tv_request_recent);
 
             holder.play = (ImageButton) convertView.findViewById(R.id.myproject_request_list_play);
@@ -85,7 +85,7 @@ public class RequestsListAdapter extends BaseAdapter{
 
         holder.textName.setText(dto.getName());
         holder.textAdmin.setText(dto.getAdmin());
-        holder.textInst.setText(dto.getInst());
+        //holder.textInst.setText(dto.getInst());
         holder.textUpdate.setText(dto.getUpdate());
 
         holder.mediaPlayer = dto.getMediaPlayer();

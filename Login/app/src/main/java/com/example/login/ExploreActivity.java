@@ -111,7 +111,7 @@ public class ExploreActivity extends AppCompatActivity {
                         requests.add(request);
                     }
 */
-                    System.out.println(item.getString("last_update"));
+                    System.out.println("@@@" + item.getString("projectID"));
 
                     MusicView dto = new MusicView();
                     dto.setName(item.getString("projectID"));
