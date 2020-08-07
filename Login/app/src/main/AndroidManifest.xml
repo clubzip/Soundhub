@@ -44,7 +44,7 @@
 
         <activity
             android:name=".MusicActivity"
-            android:label="Explore Page"/>
+            android:label="Music Detail"/>
 
         <activity
             android:name=".MainActivity"

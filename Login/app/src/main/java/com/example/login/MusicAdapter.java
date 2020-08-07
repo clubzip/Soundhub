@@ -1,10 +1,17 @@
 package com.example.login;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.login.Commit;
 import com.example.login.Music;
@@ -12,75 +19,295 @@ import com.example.login.MusicClickListener;
 import com.example.login.MusicView;
 import com.example.login.Request;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MusicAdapter extends BaseAdapter {
 
-    private LayoutInflater inflate;
-    private ArrayList<Music> musics;
-    private int layout;
-    public static Context context;
+    private AppCompatActivity m_activity;
+    private ArrayList<MusicView> listCustom = new ArrayList<>();
 
-    ArrayList<Commit> commits;
-
-    public MusicAdapter(Context context, int layout, ArrayList<Music> musics) {
-        this.inflate = LayoutInflater.from(context);
-        this.layout = layout;
-        this.musics = musics;
-        this.context = context;
-    }
+    public void setActivity(AppCompatActivity activity){this.m_activity = activity;}
 
     @Override
     public int getCount() {
-        return musics.size();//array size
+        return listCustom.size();
     }
 
     @Override
-    public Music getItem(int pos) {
-        Music item = (Music) musics.get(pos);
-        return item;
+    public Object getItem(int position) {
+        return listCustom.get(position);
     }
 
     @Override
-    public long getItemId(int pos) { return pos; }
+    public long getItemId(int position) {
+        return position;
+    }
 
     @Override
-    public View getView(int pos, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final CustomViewHolder holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.music, null, false);
 
-        MusicView view = null;
+            holder = new CustomViewHolder();
 
-        if(convertView == null) {view = new MusicView(context,null);}
-        else { view = (MusicView) convertView;}
+            holder.textName = (TextView) convertView.findViewById(R.id.tv_title);
+            holder.textAdmin = (TextView) convertView.findViewById(R.id.tv_admin);
+            holder.textInst = (TextView) convertView.findViewById(R.id.tv_instruments);
+            holder.textUpdate = (TextView) convertView.findViewById(R.id.tv_recent);
 
-        Music item = (Music) musics.get(pos);
+            holder.play = (ImageView) convertView.findViewById(R.id.play_stop);
+            holder.stop = (ImageView) convertView.findViewById(R.id.play_stop_2);
+            holder.seekBar = (SeekBar) convertView.findViewById(R.id.seekBar);
+            holder.show_time = (TextView) convertView.findViewById(R.id.tv_time);
 
-        view.setTitle(item.getProjectID());
-        view.setAdmin(item.getAdmin());
-        view.setRecent(item.getLast_update());
+            convertView.setTag(holder);
 
-        commits = item.getCommits();
-        String instruments ="";
-
-        for (int i=0; i<commits.size(); i++) {
-
-            Commit commit = commits.get(i);
-
-            if (i == commits.size()-1) {
-                instruments += "* "+commit.getCategory();
-            } else {
-                instruments += "* "+commit.getCategory() + " ";
-            }
+        } else {
+            holder = (CustomViewHolder) convertView.getTag();
         }
 
-        view.setInstruments(instruments);
+        final MusicView dto = listCustom.get(position);
+        if(dto.getMediaPlayer() == null){
 
-        /**
-         * 노래 시작버튼 누르면 이미 바뀌면서 노래 재생되게 만들기!
-         */
+            MediaPlayer mp = new MediaPlayer();
+            try {
+                System.out.println(dto.getMp3_name());
 
-        MusicClickListener musicClickListener = new MusicClickListener(context,item.getProjectID());
-        view.setOnClickListener(musicClickListener);
+                mp.setDataSource("/sdcard/AppName/" + dto.getMp3_name() + ".mp3");
+                mp.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        return view;
+            dto.setMediaPlayer(mp);
+
+        }
+
+        holder.textName.setText(dto.getName());
+        holder.textAdmin.setText(dto.getAdmin());
+        holder.textInst.setText(dto.getInst());
+        holder.textUpdate.setText(dto.getUpdate());
+
+        holder.mediaPlayer = dto.getMediaPlayer();
+        int dur = holder.mediaPlayer.getDuration();
+        if((dur/1000) % 60 < 10) holder.duration_str = (dur/1000)/60 + ":0" + (dur/1000)%60;
+        else holder.duration_str = (dur/1000)/60 + ":" + (dur/1000)%60;
+
+
+        holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar sb, int progress, boolean b) {
+                if (sb.getMax() == progress && !dto.checkInitialPlay()) {//재생 끝났을 때
+                    dto.setIsPlaying(false);
+                    holder.isPlaying = false;
+                    holder.mediaPlayer.pause();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                if (!dto.checkInitialPlay()) {
+                    dto.setIsPlaying(false);
+                    holder.isPlaying = false;
+                    holder.mediaPlayer.pause();
+                }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar sb) {
+                if (!dto.checkInitialPlay()) {
+
+                    dto.setIsPlaying(true);
+                    holder.isPlaying = true;
+                    int new_pos = sb.getProgress(); // 사용자가 움직여놓은 위치
+                    dto.setProgress(new_pos);
+
+
+                    holder.mediaPlayer.seekTo(new_pos);
+                    System.out.println("Try mediaplayer start at " + new_pos);
+                    holder.mediaPlayer.start();
+
+                    System.out.println("mediaplayer started@@");
+
+                    MyThread myThread = new MyThread();
+                    myThread.c_holder = holder;
+
+                    myThread.start();
+                }
+            }
+        });
+
+        holder.play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                holder.play.setVisibility(View.GONE);
+                holder.stop.setVisibility(View.VISIBLE);
+                if (dto.checkInitialPlay()) {//최초 play
+
+                    holder.seekBar.setMax(holder.mediaPlayer.getDuration()); // 시크바 최대 범위를 노래 재생시간으로 설정
+
+                    holder.seekBar.setProgress(0);
+                    holder.mediaPlayer.start();
+
+                    dto.setIsPlaying(true);
+                    dto.setInitial_play();
+                    holder.isPlaying = true;
+
+                    MyThread myThread = new MyThread();
+                    myThread.c_holder = holder;
+                    myThread.start();
+
+                } else {
+
+
+                    holder.mediaPlayer.seekTo(dto.getProgress());//멈춘 시점부터 재시작
+                    holder.mediaPlayer.start();
+
+                    dto.setIsPlaying(true);
+                    holder.isPlaying = true;
+
+                    MyThread myThread = new MyThread();
+                    myThread.c_holder = holder;
+                    myThread.start();
+                }
+
+            }
+        });
+
+        holder.stop.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View view) {
+
+                holder.stop.setVisibility(View.GONE);
+                holder.play.setVisibility(View.VISIBLE);
+                if (!dto.checkInitialPlay()) {
+                    System.out.println("not initial play@@@@@@@@@@@@@@@@@");
+                    dto.setProgress(holder.mediaPlayer.getCurrentPosition());
+
+                    holder.mediaPlayer.pause();
+                    dto.setIsPlaying(false);
+                    holder.isPlaying = false;
+                }
+            }
+        });
+
+        holder.seekBar.setFocusable(false);
+        holder.seekBar.setFocusableInTouchMode(false);
+
+        holder.play.setFocusable(false);
+        holder.play.setFocusableInTouchMode(false);
+
+        holder.stop.setFocusable(false);
+        holder.stop.setFocusableInTouchMode(false);
+
+
+        SynchSeekBar synch = new SynchSeekBar();
+        synch.s_holder = holder;
+        synch.start();
+
+        return convertView;
+    }
+
+
+
+
+
+    class CustomViewHolder {
+
+        TextView textName;
+        TextView textAdmin;
+        TextView textInst;
+        TextView textUpdate;
+        ImageView play;
+        ImageView stop;
+        MediaPlayer mediaPlayer;
+
+        int duration;
+        String duration_str;
+        TextView show_time;
+        int played_sec = 0;
+        int played_minute = 0;
+        SeekBar seekBar;//음악 재생위치를 나타내는 시크바
+        boolean isPlaying = false; // 재생중?
+
+    }
+
+    class MyThread extends Thread {
+        CustomViewHolder c_holder;
+
+        @Override
+        public void run(){//Thread 시작할때 콜백되는 메서드
+            //시크바 막대기 조금씩 움직이기 (노래 끝날 때 까지 반복)
+            while(c_holder.isPlaying){
+
+                int curr_pos = c_holder.mediaPlayer.getCurrentPosition();
+                c_holder.seekBar.setProgress(curr_pos);
+                System.out.println("current pos : " + curr_pos);
+
+
+                int played = curr_pos / 1000;
+                final int played_minute = played / 60;
+                final int played_sec = played % 60;
+                if(played_minute != c_holder.played_minute || played_sec != c_holder.played_sec) {
+                    m_activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(played_sec % 60 < 10) c_holder.show_time.setText(played_minute + ":0" + played_sec + " / " + c_holder.duration_str);
+                            else c_holder.show_time.setText(played_minute + ":" + played_sec + " / " + c_holder.duration_str);
+                        }
+                    });
+                }
+                c_holder.played_minute = played_minute;
+                c_holder.played_sec = played_sec;
+
+            }
+
+        }
+    }
+
+
+    public void addItem(MusicView dto) {
+
+        listCustom.add(dto);
+    }
+
+    public void delItem(MusicView dto){
+        listCustom.remove(dto);
+    }
+
+    public void modifyItem(int i, MusicView dto){
+        listCustom.set(i, dto);
+    }
+
+    class SynchSeekBar extends Thread {
+        CustomViewHolder s_holder;
+        @Override
+        public void run(){//Thread 시작할때 콜백되는 메서드
+            int curr_pos = s_holder.mediaPlayer.getCurrentPosition();
+            System.out.println("SynchSeekbar ###");
+
+            s_holder.seekBar.setMax(s_holder.mediaPlayer.getDuration());
+            s_holder.seekBar.setProgress(curr_pos);
+
+
+            int played = curr_pos / 1000;
+            final int played_minute = played / 60;
+            final int played_sec = played % 60;
+
+            m_activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(played_sec % 60 < 10) s_holder.show_time.setText(played_minute + ":0" + played_sec + " / " + s_holder.duration_str);
+                    else s_holder.show_time.setText(played_minute + ":" + played_sec + " / " + s_holder.duration_str);
+                }
+            });
+
+
+        }
     }
 }

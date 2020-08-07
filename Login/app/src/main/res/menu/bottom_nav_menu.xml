@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/navigation_first"
-
-        android:title="@string/title_first" />
+        android:icon="@drawable/icon_project"
+        android:title="" />
 
     <item
         android:id="@+id/navigation_second"
-
-        android:title="@string/title_second" />
+        android:icon="@drawable/icon_commit"
+        android:title=""/>
 
     <item
         android:id="@+id/navigation_third"
-
-        android:title="@string/title_third" />
+        android:icon="@drawable/icon_request"
+        android:title="" />
 
 </menu>

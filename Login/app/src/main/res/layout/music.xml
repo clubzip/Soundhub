@@ -74,23 +74,48 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/bm"
+            android:gravity="center"
+            android:text="0:00 / 0:00"
+            android:textColor="@color/blue"
+            android:textSize="13dp"
+            android:textStyle="italic" />
+
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:padding="15dp"
             android:thumb="@drawable/thumb"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="0dp"
             android:layout_height="wrap_content" />
 
         <ImageView
             android:id="@+id/play_stop"
             android:layout_width="20dp"
-            android:layout_marginRight="3dp"
             android:layout_height="20dp"
-            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/play" />
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/play"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/play_stop_2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/stop"
+            android:visibility="gone"/>
 
 
     </LinearLayout>

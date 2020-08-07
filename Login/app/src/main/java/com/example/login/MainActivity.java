@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         tedPermission();
 
         startService(new Intent(this,ForcedTerminationService.class));
-        url = "http://192.168.0.102:3001/api/signin";
+        url = "http://192.168.0.112:3001/api/signin";
 
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPW = (EditText) findViewById(R.id.etPassword);

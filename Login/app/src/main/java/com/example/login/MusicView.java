@@ -2,6 +2,7 @@ package com.example.login;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -12,44 +13,75 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class MusicView extends LinearLayout {
+public class MusicView {
 
-    TextView tv_title, tv_admin, tv_contributors, tv_instruments, tv_recent, tv_like;
-    ImageView play_stop;
+    private int mp3_id;
+    private String Name;
+    private int duration;
+    private String duration_str;
+    private boolean initial_play = true;
+    private MediaPlayer dto_mp;
+    private int progress;
+    private String mp3_name;
+    private boolean isPlaying;
 
-    public MusicView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
+    private String admin;
+    private String inst;
+    private String update;
+
+    public String getName() {
+        return Name;
+    }
+    public void setName(String name) {
+        this.Name = name;
     }
 
-    private void init(Context context) {
+    public int getDuration() {
+        return duration;
+    }
+    public void setDuration(int dr){this.duration = dr;}
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.music,this,true);
+    public String getDurationString() {
+        return duration_str;
+    }
+    public void setDurationString(String dr){this.duration_str = dr;}
 
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_instruments = (TextView) findViewById(R.id.tv_instruments);
-        tv_admin = (TextView) findViewById(R.id.tv_admin);
-        tv_recent = (TextView) findViewById(R.id.tv_recent);
+    public boolean checkInitialPlay(){return initial_play;}
+    public void setInitial_play(){this.initial_play = false;}
+
+    public int getMp3_id() {
+        return mp3_id;
+    }
+    public void setMp3_id(int m_id) {
+        this.mp3_id = m_id;
     }
 
-    public void setTitle(String title) {
-        tv_title.setText(title);
+    public MediaPlayer getMediaPlayer() {
+        return dto_mp;
     }
-    public void setAdmin(String admin) {
-        tv_admin.setText(admin);
+    public void setMediaPlayer(MediaPlayer mp) {
+        this.dto_mp = mp;
     }
-    public void setContributors(String contributors) {
-        tv_contributors.setText(contributors);
-    }
-    public void setInstruments(String instruments) {
-        tv_instruments.setText(instruments);
-    }
-    public void setRecent(String recent) {
-        tv_recent.setText(recent);
-    }
-    public void setPlayStop(Bitmap image) {
-        play_stop.setImageBitmap(image);
-    }
+
+    public int getProgress(){return progress;}
+    public void setProgress(int pg){this.progress = pg;}
+
+    public String getMp3_name(){return mp3_name;}
+    public void setMp3_name(String m_name){this.mp3_name = m_name;}
+
+    public boolean getIsPlaying(){return isPlaying;}
+    public void setIsPlaying(boolean play){this.isPlaying = play;}
+
+    public String getAdmin(){return admin;}
+    public void setAdmin(String ad){this.admin = ad;}
+
+    public String getInst(){return inst;}
+    public void setInst(String ins){this.inst = ins;}
+
+    public String getUpdate(){return update;}
+    public void setUpdate(String upd){this.update = upd;}
+
+
+
 }
 

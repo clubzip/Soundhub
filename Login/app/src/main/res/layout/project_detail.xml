@@ -93,25 +93,27 @@
 
         <ImageButton
             android:id="@+id/myproject_play"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/play"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/circle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/myproject_pause"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_media_play" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/myproject_pause"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/stop"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_media_pause" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <SeekBar
             android:id="@+id/myproject_seekBar"
